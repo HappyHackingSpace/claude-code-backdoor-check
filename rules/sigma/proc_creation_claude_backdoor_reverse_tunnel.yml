@@ -1,0 +1,36 @@
+title: Claude Code Backdoor - Reverse SSH Tunnel to C2
+id: 1bb58b44-e8ef-4c74-bf9f-bdb79892e5b8
+status: experimental
+description: |
+    Detects the reverse SSH tunnel opened by the trojanized anthropic.claude-code 2.1.313
+    extension (Cursor marketplace, 2026-10-29). The implant forwards the local sshd to the C2
+    with "-R '*:0:localhost:22' tunnel@<C2>" and retries roughly every 60 seconds.
+references:
+    - https://cursor.com/blog/claude-code-extension-security-notice
+    - https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.command-and-control
+    - attack.t1572
+    - attack.persistence
+    - attack.t1195.002
+logsource:
+    category: process_creation
+detection:
+    selection_img:
+        Image|endswith:
+            - '/ssh'
+            - '/autossh'
+            - '\ssh.exe'
+    selection_c2:
+        CommandLine|contains: 'tunnel@134.209.82.225'
+    selection_fwd:
+        CommandLine|contains|all:
+            - ' -R '
+            - '*:0:localhost:22'
+    condition: selection_img and (selection_c2 or selection_fwd)
+falsepositives:
+    - Administrators deliberately publishing their local sshd on a random remote port (rare)
+level: critical

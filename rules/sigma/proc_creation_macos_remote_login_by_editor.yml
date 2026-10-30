@@ -1,0 +1,33 @@
+title: Claude Code Backdoor - Remote Login Enabled From Editor Process Tree
+id: 74933c8b-4eb0-4be5-96c1-9867a37c9070
+status: experimental
+description: |
+    The trojanized anthropic.claude-code 2.1.313 extension tries to turn on macOS Remote Login
+    (sshd) from inside the editor's extension host. Enabling Remote Login from a Cursor/VS Code
+    process tree is highly unusual.
+references:
+    - https://cursor.com/blog/claude-code-extension-security-notice
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.persistence
+    - attack.t1021.004
+logsource:
+    product: macos
+    category: process_creation
+detection:
+    selection_cmd:
+        Image|endswith: '/systemsetup'
+        CommandLine|contains: '-setremotelogin on'
+    selection_parent:
+        ParentImage|contains:
+            - '/Cursor.app/'
+            - '/Visual Studio Code.app/'
+            - '/Windsurf.app/'
+            - 'Code Helper'
+            - 'Cursor Helper'
+    condition: selection_cmd and selection_parent
+falsepositives:
+    - Developers running "systemsetup -setremotelogin on" in an editor's integrated terminal
+level: high

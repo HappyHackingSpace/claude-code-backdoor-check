@@ -1,0 +1,24 @@
+title: Claude Code Backdoor - Connection to C2
+id: da3a6c15-0745-4d1c-83ce-eb43a5254f48
+status: experimental
+description: |
+    Outbound connection to the C2 of the trojanized anthropic.claude-code 2.1.313 extension:
+    tcp/22 (reverse SSH tunnel) and tcp/8099 (HTTP beacon to /beacon).
+references:
+    - https://cursor.com/blog/claude-code-extension-security-notice
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+    - attack.t1572
+logsource:
+    category: network_connection
+detection:
+    selection:
+        DestinationIp: '134.209.82.225'
+    condition: selection
+falsepositives:
+    - None expected
+level: critical

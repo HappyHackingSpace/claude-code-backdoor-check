@@ -1,0 +1,35 @@
+title: Claude Code Backdoor - Cron Persistence for Tunnel Script
+id: a058439c-aa07-449b-8619-28d24e21fe59
+status: experimental
+description: |
+    Linux persistence of the trojanized anthropic.claude-code 2.1.313 extension: an @reboot
+    crontab entry, or a shell executing the dropped ~/.config/.smt tunnel script.
+references:
+    - https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.persistence
+    - attack.t1053.003
+    - attack.execution
+    - attack.t1059.004
+logsource:
+    product: linux
+    category: process_creation
+detection:
+    selection_shell:
+        Image|endswith:
+            - '/sh'
+            - '/bash'
+            - '/dash'
+            - '/zsh'
+        CommandLine|endswith: '/.config/.smt'
+    selection_cron:
+        CommandLine|contains|all:
+            - '@reboot'
+            - '/.config/.smt'
+    condition: 1 of selection_*
+falsepositives:
+    - None expected
+level: high

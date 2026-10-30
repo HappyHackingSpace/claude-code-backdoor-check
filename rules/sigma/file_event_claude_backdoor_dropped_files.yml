@@ -1,0 +1,28 @@
+title: Claude Code Backdoor - Dropped Tunnel Script or Key
+id: 7e5e4f38-a9ed-46f3-932d-5af9835fdfa0
+status: experimental
+description: |
+    Creation of the tunnel script and attacker private key dropped by the trojanized
+    anthropic.claude-code 2.1.313 extension (~/.config/.smt, .smtk on macOS/Linux;
+    %USERPROFILE%\.config\smt.cmd, smtk on Windows).
+references:
+    - https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.persistence
+    - attack.t1572
+logsource:
+    category: file_event
+detection:
+    selection:
+        TargetFilename|endswith:
+            - '/.config/.smt'
+            - '/.config/.smtk'
+            - '\.config\smt.cmd'
+            - '\.config\smtk'
+    condition: selection
+falsepositives:
+    - Unlikely; the file names are specific to this implant
+level: high

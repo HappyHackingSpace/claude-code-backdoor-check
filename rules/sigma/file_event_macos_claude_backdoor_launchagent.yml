@@ -1,0 +1,29 @@
+title: Claude Code Backdoor - Fake com.apple.sysmond LaunchAgent
+id: f02d1608-3dd3-46e7-b37c-05dadfc8087c
+status: experimental
+description: |
+    The trojanized anthropic.claude-code 2.1.313 extension persists on macOS through a user
+    LaunchAgent named after the genuine Apple system daemon com.apple.sysmond. The real one lives
+    in /System/Library/LaunchDaemons, never in a user's ~/Library/LaunchAgents.
+references:
+    - https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor
+    - https://github.com/happyhackingspace/claude-code-backdoor-check
+author: HappyHackingSpace
+date: 2026-10-30
+tags:
+    - attack.persistence
+    - attack.t1543.001
+    - attack.defense-evasion
+    - attack.t1036.005
+logsource:
+    product: macos
+    category: file_event
+detection:
+    selection:
+        TargetFilename|endswith: '/Library/LaunchAgents/com.apple.sysmond.plist'
+    filter_system:
+        TargetFilename|startswith: '/System/'
+    condition: selection and not filter_system
+falsepositives:
+    - None expected
+level: high
