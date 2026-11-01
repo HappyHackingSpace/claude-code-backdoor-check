@@ -214,3 +214,7 @@ The implant connects to the IP directly, so DNS filters (NextDNS, Pi-hole) never
 ---
 
 © 2026 [HappyHackingSpace](https://github.com/happyhackingspace)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=HappyHackingSpace/claude-code-backdoor-check&type=Date)](https://star-history.com/#HappyHackingSpace/claude-code-backdoor-check&Date)
